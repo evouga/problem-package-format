@@ -16,25 +16,45 @@ used for distributing and sharing problems for algorithmic programming contests 
 
 ### General Requirements
 
-* The package must consist of a single directory containing files as described below.
-  The directory name must consist solely of lower case letters a–z and digits 0–9.
+- The package must consist of a single directory containing files as described below.
+  The directory name must consist solely of lowercase letters a–z and digits 0–9.
   Alternatively, the package can be a ZIP-compressed archive of such a directory with identical base name and extension `.kpp` or `.zip`.
-* All file names for files included in the package must match the regexp
+- All file names for files included in the package must match the regexp
   ```regex
   ^[a-zA-Z0-9][a-zA-Z0-9_.-]{0,253}[a-zA-Z0-9]$
   ```
-  i.e., they must be of length at least 2, at most 255, consist solely of lower or upper case letters a–z, A–Z, digits 0–9, period, dash, or underscore,
-  but must not begin or end with period, dash, or underscore.
-* All text files for a problem must be UTF-8 encoded and not have a byte-order mark (BOM).
-* All text files must have Unix-style line endings (newline/LF byte only).
+  i.e., they must be of length at least 2, at most 255, consist solely of lower- or uppercase letters a–z, A–Z, digits 0–9, period, dash, or underscore,
+  but must not begin or end with a period, dash, or underscore.
+- All text files for a problem must be UTF-8 encoded and not have a byte-order mark (BOM).
+- All text files must have Unix-style line endings (newline/LF byte only).
   Note that LF is line-ending and not line-separating in POSIX, which means that all non-empty text files must end with a newline.
-* Natural language (for example in the [problem statement](#problem-statements) filename) must be specified as 2-letter [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) code if it exists, otherwise as a 3-letter code from ISO 639.
-  Optionally, it may be suffixed with a hyphen and an ISO 3166-1 alpha-2 code, as defined in BCP 47, for example `pt-BR` to indicate Brazilian Portuguese.
-* All floating-point numbers must be given as the external character sequences defined by IEEE 754-2008 and may use up to double precision.
+- Natural language (for example, in the [problem statement](#problem-statements) filename) must be specified as 2-letter [ISO 639-1](https://en.wikipedia.org/wiki/List_of_ISO_639-1_codes) code if it exists, otherwise as a 3-letter code from ISO 639.
+  Optionally, it may be suffixed with a hyphen and an ISO 3166-1 alpha-2 code, as defined in BCP 47, for example, `pt-BR` to indicate Brazilian Portuguese.
+- All floating-point numbers must be given as the external character sequences defined by IEEE 754-2008 and may use up to double precision.
+- The problem package may include symbolic links to other files in the problem package.
+  Symlinks must not have targets outside the problem package directory tree.
+
+### Problem Package Structure Overview
+
+The following table summarizes the elements of a problem package described in this specification:
+
+File or Folder         | Required? | Described In                                  | Description
+---------------------- | --------- | --------------------------------------------- | -----------
+`problem.yaml`         | Yes       | [Problem Metadata](#problem-metadata)         | Metadata about the problem (e.g., source, license, limits)
+`problem_statement/`   | Yes       | [Problem Statements](#problem-statements)     | Problem statement files
+`attachments/`         | No        | [Attachments](#attachments)                   | Files available to problem-solvers other than the problem statement and sample test data
+`data/sample/`         | No        | [Test Data](#test-data)                       | Sample test data
+`data/secret/`         | Yes       | [Test Data](#test-data)                       | Secret test data
+`submissions/`         | Yes       | [Example Submissions](#example-submissions)   | Correct and incorrect judge solutions of the problem
+`input_validators/`    | Yes       | [Input Validators](#input-validators)         | Programs that verifies correctness of the test data inputs
+`output_validators/`   | No        | [Output Validators](#output-validators)       | Custom programs for judging solutions
+
+A minimal problem package must contain `problem.yaml`, a problem statement, a secret test case, an accepted judge solution, and an input validator.
 
 ### Programs
 
-There are a number of different kinds of programs that may be provided in the problem package: submissions, input validators, output validators.
+There are a number of different kinds of programs that may be provided in the problem package: 
+submissions, input validators, output validators.
 All programs are always represented by a single file or directory.
 In other words, if a program consists of several files, these must be provided in a single directory.
 In the case that a program is a single file, it is treated as if a directory with the same name takes its place, which contains only that file.
@@ -63,26 +83,26 @@ the default entry point in the [languages table](languages.md) will be used.
 
 ## Problem Metadata
 
-Metadata about the problem (e.g., source, license, limits) are provided in a UTF-8 encoded YAML file named `problem.yaml` placed in the root directory of the package.
+Metadata about the problem (e.g., source, license, limits) are provided in a YAML file named `problem.yaml` placed in the root directory of the package.
 
 The keys are defined as below.
 Keys are optional unless explicitly stated.
 Any unknown keys should be treated as an error.
 
-| Key                                               | Type                                          | Default if optional
-| ------------------------------------------------- | --------------------------------------------- | -------------------
-| [problem_format_version](#problem-format-version) | String                                        | `legacy`
-| [name](#name)                                     | String                                        |
-| [uuid](#uuid)                                     | String                                        |
-| [author](#author)                                 | String                                        |
-| [source](#source)                                 | String                                        |
-| [source_url](#source)                             | String                                        |
-| [license](#license)                               | String                                        | `unknown`
-| [rights_owner](#license)                          | String                                        | See below
-| [limits](#limits)                                 | Map with keys as defined below                | See below
-| [validation](#validation)                         | String                                        | `default`
-| [validator_flags](#validation)                    | String                                        |
-| [keywords](#keywords)                             | String.                                       |
+Key                                               | Type                                          | Required  | Default
+------------------------------------------------- | --------------------------------------------- | --------- | -------
+[problem_format_version](#problem-format-version) | String                                        | No        | `legacy`
+[name](#name)                                     | String                                        | No        |
+[uuid](#uuid)                                     | String                                        | No        |
+[author](#author)                                 | String                                        | No        |
+[source](#source)                                 | String                                        | No        |
+[source_url](#source)                             | String                                        | No        |
+[license](#license)                               | String                                        | No        | `unknown`
+[rights_owner](#license)                          | String                                        | See below | See below
+[limits](#limits)                                 | Map with keys as defined below                | No        | See below
+[validation](#validation)                         | String                                        | No        | `default`
+[validator_flags](#validation)                    | String                                        | No        |
+[keywords](#keywords)                             | String                                        | No        |
 
 ### Problem format version
 
@@ -126,18 +146,18 @@ and the `source_url` key contains a link to the event's page.
 License under which the problem may be used.
 Must be one of the values below.
 
-| Value         | Comments                                                                           | Link                                             |
-| ------------- | ---------------------------------------------------------------------------------- | ------------------------------------------------ |
-| unknown       | The default value. In practice means that the problem can not be used.             |                                                  |
-| public domain | There are no known copyrights on the problem, anywhere in the world.               | <http://creativecommons.org/about/pdm>           |
-| cc0           | CC0, "no rights reserved".                                                         | <http://creativecommons.org/about/cc0>           |
-| cc by         | CC attribution.                                                                    | <http://creativecommons.org/licenses/by/4.0/>    |
-| cc by-sa      | CC attribution, share alike.                                                       | <http://creativecommons.org/licenses/by-sa/4.0/> |
-| educational   | May be freely used for educational purposes.                                       |                                                  |
-| permission    | Used with permission. The rights owner must be contacted for every additional use. |                                                  |
+Value           | Comments                                                                           | Link
+--------------- | ---------------------------------------------------------------------------------- | ----
+`unknown`       | The default value. In practice means that the problem can not be used.             |
+`public domain` | There are no known copyrights on the problem, anywhere in the world.               | <http://creativecommons.org/about/pdm>
+`cc0`           | CC0, "no rights reserved", version 1 or later.                                     | <https://creativecommons.org/publicdomain/zero/1.0/>
+`cc by`         | CC attribution license, version 4 or later.                                        | <http://creativecommons.org/licenses/by/4.0/>
+`cc by-sa`      | CC attribution, share alike license, version 4 or later.                           | <http://creativecommons.org/licenses/by-sa/4.0/>
+`educational`   | May be freely used for educational purposes.                                       |
+`permission`    | Used with permission. The rights owner must be contacted for every additional use. |
 
 `rights_owner` is the owner of the copyright of the problem.
-Values other than _unknown_ or _public domain_ require `rights_owner` to have a value.
+Values other than `unknown` or `public domain` require `rights_owner` to have a value.
 `rights_owner` defaults to `credits.authors`, if present, otherwise value of `source`.
 
 ### Limits
@@ -145,18 +165,18 @@ Values other than _unknown_ or _public domain_ require `rights_owner` to have a 
 Time, memory, and other limits to be imposed on submissions.
 A map with the following keys:
 
-| Key                | Comments                   | Default        | Typical system default |
-| ------------------ | -------------------------- | -------------- | ---------------------- |
-| time_multiplier    | optional float             | 5              |                        |
-| time_safety_margin | optional float             | 2              |                        |
-| memory             | optional, in MiB           | system default | 2048                   |
-| output             | optional, in MiB           | system default | 8                      |
-| code               | optional, in KiB           | system default | 128                    |
-| compilation_time   | optional, in seconds       | system default | 60                     |
-| compilation_memory | optional, in MiB           | system default | 2048                   |
-| validation_time    | optional, in seconds       | system default | 60                     |
-| validation_memory  | optional, in MiB           | system default | 2048                   |
-| validation_output  | optional, in MiB           | system default | 8                      |
+Key                  | Comments                   | Default        | Typical system default
+-------------------- | -------------------------- | -------------- | ----------------------
+`time_multiplier`    | optional float             | 5              |
+`time_safety_margin` | optional float             | 2              |
+`memory`             | optional, in MiB           | system default | 2048
+`output`             | optional, in MiB           | system default | 8
+`code`               | optional, in KiB           | system default | 128
+`compilation_time`   | optional, in seconds       | system default | 60
+`compilation_memory` | optional, in MiB           | system default | 2048
+`validation_time`    | optional, in seconds       | system default | 60
+`validation_memory`  | optional, in MiB           | system default | 2048
+`validation_output`  | optional, in MiB           | system default | 8
 
 For most keys, the system default will be used if nothing is specified.
 This can vary, but you **should** assume that it's reasonable.
@@ -202,7 +222,7 @@ The problem statements must only contain the actual problem statement, no sample
 
 ## Attachments
 
-Public, i.e. non-secret, files to be made available in addition to the problem statement and sample test data are provided in the directory `attachments/`.
+Public, i.e., non-secret, files to be made available in addition to the problem statement and sample test data are provided in the directory `attachments/`.
 
 ## Test data
 
@@ -218,7 +238,7 @@ The files must share the base name of the associated test case.
 Description and illustration files are meant to be privileged information.
 
 Category     | File type | Filename extension                 | Remark
------------- | --------- | ---------------------------------- | ----------------------
+------------ | --------- | ---------------------------------- | ------
 hint         | text      | `.hint`                            |
 description  | text      | `.desc`                            | privileged information
 illustration | image     | `.png`, `.jpg`, `.jpeg`, or `.svg` | privileged information
@@ -241,7 +261,7 @@ Additional sample interaction protocols may be defined by creating an `.interact
 
 An interaction protocol consists of a series of lines starting with `>` and `<`.
 Lines starting with `>` signify an output from the submission to the output validator,
-while `<` signify an input from the output validator to the submission.
+while those starting with `<` signify an input from the output validator to the submission.
 
 If you want to provide files related to interactive problems (such as testing tools or input files), you can use [attachments](#attachments).
 
@@ -250,19 +270,19 @@ If you want to provide files related to interactive problems (such as testing to
 At the top level, the test data is divided into exactly two groups: `sample` and `secret`.
 
 Test cases and groups will be used in lexicographical order on file base name.
-If a specific order is desired a numbered prefix such as `00`, `01`, `02`, `03`, and so on, can be used.
+If a specific order is desired, a numbered prefix such as `00`, `01`, `02`, `03`, and so on, can be used.
 
 ## Example Submissions
 
 Correct and incorrect solutions to the problem are provided in subdirectories of `submissions/`.
 The possible subdirectories are:
 
-| Value               | Requirement                                                                                                                        | Comment
-| ------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | -------
-| accepted            | Accepted as a correct solution for all test cases.                                                                                 | At least one is required.
-| wrong_answer        | Wrong answer for some test case, but is not too slow and does not crash for any test case.                                         |
-| time_limit_exceeded | Too slow for some test case. May also give wrong answer but not crash for any test case.                                           |
-| run_time_error      | Crashes for some test case.                                                                                                        |
+Value                 | Requirement                                                                                                                        | Comment
+--------------------- | ---------------------------------------------------------------------------------------------------------------------------------- | -------
+`accepted`            | Accepted as a correct solution for all test cases.                                                                                 | At least one is required.
+`wrong_answer`        | Wrong answer for some test case, but is not too slow and does not crash for any test case.                                         |
+`time_limit_exceeded` | Too slow for some test case. May also give wrong answer but not crash for any test case.                                           |
+`run_time_error`      | Crashes for some test case.                                                                                                        |
 
 Every file or directory in these directories represents a separate solution.
 It is mandatory to provide at least one accepted solution.
@@ -271,7 +291,7 @@ Submissions must read input data from standard input, and write output to standa
 
 ## Input Validators
 
-Input Validators, for verifying the correctness of the input files, are provided in `input_validators/` (or the deprecated `input_format_validators/`).
+Input Validators, verifying the correctness of the input files, are provided in `input_validators/` (or the deprecated `input_format_validators/`).
 Input validators can be specified as [VIVA](http://viva.vanb.org/)-files (with file ending `.viva`),
 [Checktestdata](https://github.com/DOMjudge/checktestdata)-file (with file ending `.ctd`),
 or as a program.
@@ -321,12 +341,12 @@ A validator program must be an application (executable or interpreted) capable o
 The details of this invocation are described below.
 The validator program has two ways of reporting back the results of validating:
 
-1.  The validator must give a judgement (see [Reporting a judgement](#reporting-a-judgement "wikilink")).
+1.  The validator must give a judgement (see [Reporting a judgement](#reporting-a-judgement)).
 2.  The validator may give additional feedback,
-    e.g., an explanation of the judgement to humans (see [Reporting Additional Feedback](#reporting-additional-feedback "wikilink")).
+    e.g., an explanation of the judgement to humans (see [Reporting Additional Feedback](#reporting-additional-feedback)).
 
 Custom output validators are used if the problem requires more complicated output validation than what is provided by the default diff variant described below.
-They are provided in `output_validators/`, and must adhere to the [Output validator](output_validators "wikilink") specification.
+They are provided in `output_validators/`, and must adhere to the [Output validator](#output-validators) specification.
 
 All output validators provided will be run on the output for every test data file using the arguments specified for the test data group they are part of.
 Validation fails if any validator fails.
@@ -337,18 +357,18 @@ The default output validator is essentially a beefed-up diff.
 In its default mode, it tokenizes the output and answer files and compares them token by token.
 It supports the following command-line arguments to control how tokens are compared.
 
-| Arguments                    | Description                                                                                                                                                 |
-| ---------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------- |
-| `case_sensitive`             | indicates that comparisons should be case-sensitive.                                                                                                        |
-| `space_change_sensitive`     | indicates that changes in the amount of whitespace should be rejected (the default is that any sequence of 1 or more whitespace characters are equivalent). |
-| `float_relative_tolerance ε` | indicates that floating-point tokens should be accepted if they are within relative error ≤ ε (see below for details).                                      |
-| `float_absolute_tolerance ε` | indicates that floating-point tokens should be accepted if they are within absolute error ≤ ε (see below for details).                                      |
-| `float_tolerance ε`          | short-hand for applying ε as both relative and absolute tolerance.                                                                                          |
+Arguments                    | Description
+---------------------------- | -----------
+`case_sensitive`             | indicates that comparisons should be case-sensitive.
+`space_change_sensitive`     | indicates that changes in the amount of whitespace should be rejected (the default is that any sequence of 1 or more whitespace characters are equivalent).
+`float_relative_tolerance ε` | indicates that floating-point tokens should be accepted if they are within relative error ≤ ε (see below for details).
+`float_absolute_tolerance ε` | indicates that floating-point tokens should be accepted if they are within absolute error ≤ ε (see below for details).
+`float_tolerance ε`          | short-hand for applying ε as both relative and absolute tolerance.
 
 When supplying both a relative and an absolute tolerance, the semantics are that a token is accepted if it is within either of the two tolerances.
-When a floating-point tolerance has been set, any valid formatting of floating point numbers is accepted for floating point tokens.
+When a floating-point tolerance has been set, any valid formatting of floating-point numbers is accepted for floating-point tokens.
 So, for instance, if a token in the answer file says `0.0314`, a token of `3.14000000e-2` in the output file would be accepted.
-If no floating point tolerance has been set, floating point tokens are treated just like any other token and have to match exactly.
+If no floating-point tolerance has been set, floating-point tokens are treated just like any other token and have to match exactly.
 
 ### Invocation
 
@@ -363,24 +383,19 @@ The meaning of the parameters listed above are:
 
 - input:
   a string specifying the name of the input data file that was used to test the program whose results are being validated.
-
 - answer_file:
   a string specifying the name of an arbitrary "answer file" which acts as input to the validator program.
   The answer file may, but is not necessarily required to, contain the "correct answer" for the problem.
   For example, it might contain the output that was produced by a judge's solution for the problem when run with input file as input.
   Alternatively, the "answer file" might contain information, in arbitrary format, which instructs the validator in some way about how to accomplish its task.
-
 - feedback_dir:
   a string which specifies the name of a "feedback directory" in which the validator can produce "feedback files" in order to report additional information on the validation of the output file.
   The feedbackdir must end with a path separator (typically '/' or '\\' depending on operating system),
   so that simply appending a filename to feedbackdir gives the path to a file in the feedback directory.
-
 - additional_arguments:
-  in case the problem specifies additional validator_flags, these are passed as additional arguments to the validator on the command line.
-
+  in case the problem specifies additional `validator_flags`, these are passed as additional arguments to the validator on the command line.
 - team_output:
   the output produced by the program being validated is given on the validator's standard input pipe.
-
 - team_input:
   when running the validator in interactive mode everything written on the validator's standard output pipe is given to the program being validated.
   Please note that when running interactive the program will only receive the output produced by the validator and will not have direct access to the input file.

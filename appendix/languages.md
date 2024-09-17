@@ -1,9 +1,15 @@
+---
+layout: default
+title: Languages
+sort: 4
+---
+
 # Languages
 
-File endings in parenthesis are not used for determining language.
+File endings in parentheses are not used for determining language.
 
 | Code         | Language            | Default entry point | File endings                    |
-| ------------ | ------------------- | ------------------- | ------------------------------- |
+| ------------ | ------------------- |---------------------| ------------------------------- |
 | ada          | Ada                 |                     | .adb, .ads                      |
 | algol68      | Algol 68            |                     | .a68                            |
 | apl          | APL                 |                     | .apl                            |
@@ -42,9 +48,9 @@ File endings in parenthesis are not used for determining language.
 | perl         | Perl                |                     | .pm, (.pl)                      |
 | php          | PHP                 | `main.php`          | .php                            |
 | prolog       | Prolog              |                     | .pl                             |
-| python2      | Python 2            | `main.py2`          | (.py), .py2                     |
-| python3      | Python 3            | `main.py`           | .py, .py3                       |
-| python3numpy | Python 3 with NumPy | `main.py`           | (.py, .py3)                     |
+| python2      | Python 2            | `__main__.py`       | (.py), .py2                     |
+| python3      | Python 3            | `__main__.py`       | .py, .py3                       |
+| python3numpy | Python 3 with NumPy | `__main__.py`       | (.py, .py3)                     |
 | racket       | Racket              |                     | .rkt                            |
 | ruby         | Ruby                |                     | .rb                             |
 | rust         | Rust                |                     | .rs                             |
